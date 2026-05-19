@@ -1,0 +1,64 @@
+.zodiac-container {
+  padding-top: 50px;
+  text-align: center;
+  perspective: 1000px; 
+}
+
+.glitch-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  cursor: pointer;
+  
+  /* --- MOVIMIENTO UNIFORME DE TODO EL TÍTULO --- */
+  animation: float-all 4s ease-in-out infinite;
+}
+
+.glitch-title span {
+  display: inline-block;
+  transition: all 0.3s ease-in-out;
+  
+  /* --- BLANCO BRILLANTE --- */
+  color: #ffffff;
+  
+  /* Sombra blanca multicapa para efecto neón intenso */
+  text-shadow: 
+    0 0 10px #ffffff,
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(255, 255, 255, 0.4);
+}
+
+/* HOVER DE COLORES (Se activa al pasar el mouse por el bloque) */
+.glitch-title:hover span:nth-child(5n+1) { color: #ff0055; text-shadow: 0 0 20px #ff0055; }
+.glitch-title:hover span:nth-child(5n+2) { color: #00ff99; text-shadow: 0 0 20px #00ff99; }
+.glitch-title:hover span:nth-child(5n+3) { color: #0066ff; text-shadow: 0 0 20px #0066ff; }
+.glitch-title:hover span:nth-child(5n+4) { color: #ffff00; text-shadow: 0 0 20px #ffff00; }
+.glitch-title:hover span:nth-child(5n+5) { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
+
+/* HOVER INDIVIDUAL (Resalte extra) */
+.glitch-title span:hover {
+  transform: scale(1.5) translateY(-10px); /* Un pequeño extra al tocar la letra */
+  color: #ffffff !important;
+  text-shadow: 
+    0 0 15px #ffffff,
+    0 0 30px #ffffff,
+    0 0 60px #ffffff !important;
+  z-index: 100;
+}
+
+.space {
+  width: 35px; 
+}
+
+/* --- ANIMACIÓN UNIFORME (Sube y baja todo el bloque) --- */
+@keyframes float-all {
+  0%, 100% { 
+    transform: translateY(0); 
+  }
+  50% {
+    transform: translateY(-20px); /* Sube parejo */
+  }
+}

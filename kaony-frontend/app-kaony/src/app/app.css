@@ -1,0 +1,34 @@
+/* src/app/app.css */
+:host {
+  display: block;
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* Alto completo de la pantalla */
+  width: 100vw;  /* Ancho completo de la pantalla */
+  position: relative; /* Marco de referencia para los elementos absolutos */
+}
+
+/* El contenedor del canvas debe ser una capa de fondo absoluta */
+.canvas-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Se queda atrás */
+  background-color: #000000;
+}
+
+canvas {
+  display: block; /* Elimina espacios por defecto de Three.js */
+}
+
+
+app-title {
+  position: absolute; /* Importante para que no empuje el canvas */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10; /* Se queda adelante del canvas */
+  pointer-events: none; /* Permite "clicar" a través del título */
+}
