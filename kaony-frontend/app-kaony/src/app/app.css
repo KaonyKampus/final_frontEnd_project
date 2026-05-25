@@ -1,34 +1,222 @@
-/* src/app/app.css */
 :host {
   display: block;
-  margin: 0;
-  padding: 0;
-  height: 100vh; /* Alto completo de la pantalla */
-  width: 100vw;  /* Ancho completo de la pantalla */
-  position: relative; /* Marco de referencia para los elementos absolutos */
-}
-
-/* El contenedor del canvas debe ser una capa de fondo absoluta */
-.canvas-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1; /* Se queda atrás */
+  margin: 0; padding: 0;
+  width: 100vw; position: relative;
   background-color: #000000;
 }
 
-canvas {
-  display: block; /* Elimina espacios por defecto de Three.js */
+.canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+canvas { display: block; width: 100%; height: 100%; }
+.trigger-capa { position: fixed; top: 30vh; left: 35vw; width: 30vw; height: 50vh; z-index: 5; cursor: pointer; }
+app-title { position: fixed; top: 8%; left: 0; width: 100%; z-index: 10; pointer-events: none; }
+.scroll-space { height: 160vh; pointer-events: none; }
+
+.modal-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(4, 2, 8, 0.94);
+  backdrop-filter: blur(20px);
+  z-index: 9999; overflow: hidden;
 }
 
-
-app-title {
-  position: absolute; /* Importante para que no empuje el canvas */
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10; /* Se queda adelante del canvas */
-  pointer-events: none; /* Permite "clicar" a través del título */
+.modal-vertical-slider {
+  display: flex; flex-direction: column;
+  width: 100%; height: 200%;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
+.modal-vertical-slider.show-grid { transform: translateY(-50%); }
+
+.level-top, .level-bottom {
+  height: 50%; width: 100%;
+  display: flex; justify-content: center; align-items: center;
+  box-sizing: border-box;
+}
+
+.modal-window {
+  background: rgba(18, 9, 28, 0.98);
+  border: 1px solid rgba(157, 0, 255, 0.25);
+  border-radius: 16px;
+  width: 460px; height: 380px;
+  overflow: hidden; position: relative;
+  transition: width 0.55s cubic-bezier(0.25, 1, 0.5, 1), height 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 40px rgba(157, 0, 255, 0.1);
+}
+
+.modal-window.expand-window { 
+  width: 820px; 
+  height: 460px;
+}
+
+.modal-horizontal-slider {
+  display: flex; width: 200%; height: 100%;
+  transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.modal-horizontal-slider.show-autor { transform: translateX(-50%); }
+
+.slide { width: 50%; height: 100%; flex-shrink: 0; box-sizing: border-box; }
+
+.menu-layout { 
+  padding: 50px 40px; 
+  display: flex; flex-direction: column; justify-content: center; align-items: center; 
+}
+
+.autor-layout { 
+  display: grid; 
+  grid-template-columns: 45% 55%; 
+  height: 100%;
+  background: #0d0714;
+}
+
+.autor-image-container { width: 100%; height: 100%; position: relative; overflow: hidden; }
+.autor-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.image-gradient-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to right, rgba(13, 7, 20, 0) 60%, rgba(13, 7, 20, 1) 98%);
+}
+
+.autor-text-container { 
+  padding: 45px; 
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  text-align: left;
+}
+
+.grid-container {
+  width: 90vw; max-width: 1300px; height: 85vh;
+  display: flex; flex-direction: column;
+}
+
+.grid-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 25px; border-bottom: 1px solid rgba(157, 0, 255, 0.15);
+  padding-bottom: 15px;
+}
+
+.gallery-main-title {
+  color: #ffffff; font-family: 'Cinzel Decorative', serif;
+  font-size: 1.8rem; letter-spacing: 6px; margin: 0;
+}
+
+.poemas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px; 
+  overflow-y: auto; height: 100%; padding-bottom: 20px;
+}
+
+.poema-card {
+  position: relative; border-radius: 10px; overflow: hidden;
+  height: 240px; border: 1px solid rgba(157, 0, 255, 0.15);
+  cursor: pointer; background: #000;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.poema-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(157, 0, 255, 0.5);
+}
+
+.gallery-pure-img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
+  filter: brightness(80%) contrast(105%);
+}
+
+.poema-card:hover .gallery-pure-img {
+  transform: scale(1.05); filter: brightness(100%);
+}
+
+.card-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to top, rgba(12, 5, 20, 0.9) 5%, rgba(12, 5, 20, 0.2) 70%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 25px; box-sizing: border-box;
+  opacity: 0; transition: opacity 0.4s ease;
+}
+.poema-card:hover .card-overlay { opacity: 1; }
+
+.obra-title { color: #ffffff; font-size: 1.25rem; font-family: 'Cinzel Decorative', serif; letter-spacing: 2px; margin-bottom: 4px; }
+.obra-desc { color: #bcaed4; font-size: 0.85rem; font-weight: 300; letter-spacing: 0.5px; }
+
+.poem-reader-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(6, 3, 10, 0.96);
+  backdrop-filter: blur(25px);
+  z-index: 100000; 
+  display: flex; justify-content: center; align-items: center;
+  animation: fadeInReader 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.poem-reader-content {
+  background: rgba(22, 12, 36, 0.85);
+  border: 1px solid rgba(157, 0, 255, 0.3);
+  width: 90%; max-width: 700px;
+  max-height: 85vh; border-radius: 16px;
+  padding: 45px; box-sizing: border-box;
+  position: relative; display: flex; flex-direction: column;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.95), 0 0 50px rgba(157, 0, 255, 0.15);
+}
+
+.close-reader-btn {
+  position: absolute; top: 20px; right: 25px;
+  background: transparent; border: none;
+  color: rgba(255, 255, 255, 0.5); font-size: 2.2rem;
+  cursor: pointer; transition: color 0.2s ease;
+}
+.close-reader-btn:hover { color: #9d00ff; }
+
+.reader-title {
+  color: #ffffff; font-family: 'Cinzel Decorative', serif;
+  font-size: 2rem; letter-spacing: 4px; text-align: center; margin: 0 0 6px 0;
+}
+
+.reader-subtitle {
+  color: #a39cb1; font-size: 0.85rem; text-align: center;
+  text-transform: uppercase; letter-spacing: 1px; margin: 0 0 20px 0;
+}
+
+.reader-divider {
+  border: none; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(157, 0, 255, 0.5), transparent);
+  margin-bottom: 25px; width: 100%;
+}
+
+.poem-scrollable-body {
+  overflow-y: auto; padding-right: 15px;
+  text-align: left; height: 100%;
+}
+
+.poem-verse {
+  color: #e5e0f0; font-family: 'Cinzel', serif;
+  font-size: 1.05rem; line-height: 1.8; margin: 0;
+  white-space: pre-wrap; 
+}
+
+.poem-scrollable-body::-webkit-scrollbar { width: 4px; }
+.poem-scrollable-body::-webkit-scrollbar-thumb { background: rgba(157, 0, 255, 0.4); border-radius: 4px; }
+
+@keyframes fadeInReader {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-title { color: #ffffff; font-family: 'Cinzel Decorative', serif; font-size: 1.7rem; letter-spacing: 4px; margin: 0 0 8px 0; }
+.modal-subtitle { color: #928ca0; font-size: 0.8rem; letter-spacing: 1px; margin: 0 0 25px 0; text-transform: uppercase; }
+
+.modal-menu ul { list-style: none; padding: 0; margin: 0 0 30px 0; text-align: center; }
+.modal-menu li { margin: 16px 0; }
+.modal-menu a { color: #ffffff; text-decoration: none; font-size: 1.1rem; letter-spacing: 3px; transition: color 0.3s ease; }
+.modal-menu a:hover { color: #a621ff; }
+
+.author-info { color: #ccc4db; font-size: 0.9rem; line-height: 1.6; text-align: justify; margin-bottom: 25px; font-weight: 300; }
+
+.close-btn, .back-up-btn {
+  background: transparent; border: 1px solid #9d00ff; color: #ffffff;
+  padding: 10px 24px; cursor: pointer; border-radius: 4px; letter-spacing: 2px;
+  font-size: 0.8rem; text-transform: uppercase; transition: all 0.3s ease;
+}
+.close-btn:hover, .back-up-btn:hover { background: #9d00ff; box-shadow: 0 0 15px rgba(157, 0, 255, 0.5); }
+
+.poemas-grid::-webkit-scrollbar { width: 5px; }
+.poemas-grid::-webkit-scrollbar-thumb { background: rgba(157, 0, 255, 0.25); border-radius: 4px; }

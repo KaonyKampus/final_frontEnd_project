@@ -1,5 +1,85 @@
-<app-title></app-title>
-
 <div class="canvas-container">
   <canvas #rendererCanvas></canvas>
 </div>
+
+<div class="trigger-capa" *ngIf="!isModalOpen" (click)="enterGallery()"></div>
+
+<app-title *ngIf="!isInGallery"></app-title>
+
+<div class="modal-overlay" *ngIf="isModalOpen">
+  
+  <div class="modal-vertical-slider" [ngClass]="{'show-grid': currentTab === 'poemas'}">
+    
+    <div class="level-top">
+      <div class="modal-window" [ngClass]="{'expand-window': currentTab === 'autor'}">
+        <div class="modal-horizontal-slider" [ngClass]="{'show-autor': currentTab === 'autor'}">
+          
+          <div class="slide menu-layout">
+            <h2 class="modal-title">KAONY KAMPUS</h2>
+            <p class="modal-subtitle">Galería interactiva de poesía y monólogos</p>
+            <nav class="modal-menu">
+              <ul>
+                <li><a href="javascript:void(0)" (click)="irAAutor()">Sobre el autor</a></li>
+                <li><a href="javascript:void(0)" (click)="irAPoemas()">Explorar Poemas</a></li>
+              </ul>
+            </nav>
+            <button class="close-btn" (click)="exitGallery()">Regresar</button>
+          </div>
+
+          <div class="slide autor-layout">
+            <div class="autor-image-container">
+              <img src="albert.jpg" alt="Albert" class="autor-img">
+              <div class="image-gradient-overlay"></div>
+            </div>
+            <div class="autor-text-container">
+              <h2 class="modal-title">ALBERT</h2>
+              <p class="modal-subtitle">La reencarnación de Kaony Kampus</p>
+              <div class="author-info">
+                <p>David no escribe, lo hace Albert. Una voz nacida en los rincones del código y la rima, encargada de proyectar las visiones existenciales y abstractas a través de prismas interactivos y líricas oscuras.</p>
+              </div>
+              <button class="close-btn" (click)="regresarAlMenu()">Volver al Menú</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="level-bottom">
+      <div class="grid-container">
+        <div class="grid-header">
+          <h2 class="gallery-main-title">EXPLORAR POEMAS</h2>
+          <button class="back-up-btn" (click)="regresarAlMenu()">
+            Volver al Menú
+          </button>
+        </div>
+        
+        <div class="poemas-grid">
+          <div class="poema-card" *ngFor="let p of poemas" (click)="abrirPoema(p)">
+            <img [src]="p.img" [alt]="p.titulo" class="gallery-pure-img">
+            <div class="card-overlay">
+              <span class="obra-title">{{p.titulo}}</span>
+              <span class="obra-desc">{{p.desc}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="poem-reader-overlay" *ngIf="poemaSeleccionado" (click)="cerrarPoema()">
+    <div class="poem-reader-content" (click)="$event.stopPropagation()">
+      <button class="close-reader-btn" (click)="cerrarPoema()">&times;</button>
+      <h2 class="reader-title">{{ poemaSeleccionado.titulo }}</h2>
+      <p class="reader-subtitle">{{ poemaSeleccionado.desc }}</p>
+      <hr class="reader-divider">
+      <div class="poem-scrollable-body">
+        <pre class="poem-verse" *ngFor="let linea of poemaSeleccionado.contenido">{{ linea }}</pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="scroll-space"></div>
