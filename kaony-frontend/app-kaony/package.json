@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --output-path=.vercel/output/static",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:app-kaony": "node dist/app-kaony/server/server.mjs"
